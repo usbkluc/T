@@ -65,7 +65,7 @@
 
             try {
                 // OPRAVENÁ URL: zmenené z v1beta na v1 pre lepšiu kompatibilitu modelu
-                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${_gk()}`;
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${_gk()}`;
                 
                 const res = await fetch(url, {
                     method: "POST",
