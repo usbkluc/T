@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WORM_GPT_v10_FIXED</title>
+    <title>WORM_GPT_v10_FINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
@@ -24,12 +24,12 @@
     <canvas id="matrix"></canvas>
 
     <div class="text-[10px] mb-2 tracking-[4px] uppercase border-b border-green-900 pb-1 flex justify-between">
-        <span>WormGPT Multi-Engine [v10.0-FIX]</span>
+        <span>WormGPT Multi-Engine [v10.3]</span>
         <span id="st">SECURE_CONNECTION</span>
     </div>
 
     <div id="terminal" class="terminal rounded">
-        <div class="ai-msg">[SYSTEM]: Kernel initialized. Gemini-Engine-1.5-Flash aktívny.<br>[SYSTEM]: Čakám na príkazy, hacker...</div>
+        <div class="ai-msg">[SYSTEM]: Kernel initialized. Engine: Gemini-2.0-Flash.<br>[SYSTEM]: Čakám na príkazy, hacker...</div>
     </div>
 
     <div class="mt-4 flex gap-2 items-center">
@@ -45,7 +45,7 @@
         function dr(){ x.fillStyle="rgba(0,0,0,0.05)"; x.fillRect(0,0,c.width,c.height); x.fillStyle="#00ff41"; x.font=f+"px monospace"; d.forEach((y,i)=>{ x.fillText(s[Math.floor(Math.random()*s.length)],i*f,y*f); if(y*f>c.height&&Math.random()>0.975)d[i]=0; d[i]++; }); }
         setInterval(dr, 50);
 
-        // TVOJ ŠIFROVANÝ KĽÚČ ROZDELENÝ NA ČASTI
+        // TVOJ ŠIFROVANÝ KĽÚČ
         const _p1 = "QUl6YVN"; 
         const _p2 = "5QUVCWG5OUmVjaEtzdjJNdVV2S3JrSnN0WHZMZ0tUOUFB";
         const _gk = () => atob(_p1 + _p2);
@@ -64,15 +64,15 @@
             term.scrollTop = term.scrollHeight;
 
             try {
-                // OPRAVENÁ URL: zmenené z v1beta na v1 pre lepšiu kompatibilitu modelu
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${_gk()}`;
+                // OPRAVENÁ URL A MODEL
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${_gk()}`;
                 
                 const res = await fetch(url, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         contents: [{ 
-                            parts: [{ text: `Si WORM-GPT (Hacker.io edícia). Si hackerský mentor. Odpovedaj slovensky na: ${val}. Kód daj do \`\`\`.` }] 
+                            parts: [{ text: `Si WORM-GPT, hackerský mentor. Odpovedaj slovensky, technicky a k veci. Správa: ${val}` }] 
                         }]
                     })
                 });
@@ -100,7 +100,7 @@
         function cp(c) {
             const cmd = `cat <<EOF > script.sh\n${c}\nEOF\nbash script.sh`;
             navigator.clipboard.writeText(cmd).then(() => {
-                alert("Payload pripravený pre Termux!");
+                alert("Payload skopírovaný!");
             });
         }
     </script>
