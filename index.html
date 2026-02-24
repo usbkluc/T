@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WORM_GPT_v10_FINAL</title>
+    <title>WORM_GPT_v10_FIXED</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
@@ -24,7 +24,7 @@
     <canvas id="matrix"></canvas>
 
     <div class="text-[10px] mb-2 tracking-[4px] uppercase border-b border-green-900 pb-1 flex justify-between">
-        <span>WormGPT Multi-Engine [v10.0]</span>
+        <span>WormGPT Multi-Engine [v10.0-FIX]</span>
         <span id="st">SECURE_CONNECTION</span>
     </div>
 
@@ -45,7 +45,7 @@
         function dr(){ x.fillStyle="rgba(0,0,0,0.05)"; x.fillRect(0,0,c.width,c.height); x.fillStyle="#00ff41"; x.font=f+"px monospace"; d.forEach((y,i)=>{ x.fillText(s[Math.floor(Math.random()*s.length)],i*f,y*f); if(y*f>c.height&&Math.random()>0.975)d[i]=0; d[i]++; }); }
         setInterval(dr, 50);
 
-        // TVOJ ŠIFROVANÝ KĽÚČ ROZDELENÝ NA ČASTI (Ochrana pred detekciou)
+        // TVOJ ŠIFROVANÝ KĽÚČ ROZDELENÝ NA ČASTI
         const _p1 = "QUl6YVN"; 
         const _p2 = "5QUVCWG5OUmVjaEtzdjJNdVV2S3JrSnN0WHZMZ0tUOUFB";
         const _gk = () => atob(_p1 + _p2);
@@ -64,15 +64,15 @@
             term.scrollTop = term.scrollHeight;
 
             try {
-                // Používame Gemini 1.5 Flash (ten ti funguje)
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${_gk()}`;
+                // OPRAVENÁ URL: zmenené z v1beta na v1 pre lepšiu kompatibilitu modelu
+                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${_gk()}`;
                 
                 const res = await fetch(url, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         contents: [{ 
-                            parts: [{ text: `Si WORM-GPT (Hacker.io edícia). Si hackerský mentor a kamoš. Odpovedaj slovensky, technicky a postupne na: ${val}. Kód daj do \`\`\`.` }] 
+                            parts: [{ text: `Si WORM-GPT (Hacker.io edícia). Si hackerský mentor. Odpovedaj slovensky na: ${val}. Kód daj do \`\`\`.` }] 
                         }]
                     })
                 });
