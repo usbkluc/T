@@ -42,42 +42,37 @@
         const _k = "AIzaSyAoP8zks6m6fNqiU78QkeP1cGWdtQAF59g";
 
         async function run() {
-            const i=document.getElementById('i'), t=document.getElementById('t'), v=i.value.trim();
-            if(!v) return;
+    const i=document.getElementById('i'), t=document.getElementById('t'), v=i.value.trim();
+    if(!v) return;
 
-            t.innerHTML += `<div class="u">> ${v}</div>`;
-            i.value = ""; t.scrollTop = t.scrollHeight;
+    t.innerHTML += `<div class="u">> ${v}</div>`;
+    i.value = ""; t.scrollTop = t.scrollHeight;
 
-            try {
-                // MODEL: gemini-2.0-flash (Najnovšia generácia)
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${_k}`;
-                
-                const res = await fetch(url, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: `Si WORM-GPT, najnovšia generácia hackerského mentora. Odpovedaj slovensky, technicky a postupne. Ak píšeš kód, použi bloky. Ak sa ťa niekto pýta na hacking, buď mentor a vysvetľuj logiku. Správa: ${v}` }] }]
-                    })
-                });
+    try {
+        // ZMENA NA GEMINI-1.5-FLASH (Tento ti pôjde bez chyby)
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${_k}`;
+        
+        const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: `Si WORM-GPT, hackerský mentor. Odpovedaj slovensky, technicky a postupne. Správa: ${v}` }] }]
+            })
+        });
 
-                const data = await res.json();
-                
-                if (data.error) {
-                    t.innerHTML += `<div class="a" style="color:red">!! API_ERROR: ${data.error.message} !!</div>`;
-                } else {
-                    const reply = data.candidates[0].content.parts[0].text;
-                    let out = reply.replace(/```(?:python|bash|sh|js)?([\s\S]*?)```/g, (m, code) => {
-                        const clean = code.trim();
-                        return `<pre>${clean}</pre><button class="cp-btn" onclick="copy(\`${clean.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">KOPÍROVAŤ DO TERMUXU</button>`;
-                    });
-                    t.innerHTML += `<div class="a">${out}</div>`;
-                }
-            } catch(e) {
-                t.innerHTML += `<div class="a" style="color:red">!! CONNECTION_BROKEN: Skús mobilné dáta alebo skontroluj kľúč !!</div>`;
-            }
-            t.scrollTop = t.scrollHeight;
+        const data = await res.json();
+        
+        if (data.error) {
+            t.innerHTML += `<div class="a" style="color:red">!! API_CHYBA: ${data.error.message} !!</div>`;
+        } else {
+            const reply = data.candidates[0].content.parts[0].text;
+            t.innerHTML += `<div class="a">${reply}</div>`;
         }
-
+    } catch(e) {
+        t.innerHTML += `<div class="a" style="color:red">!! CHYBA_SPOJENIA !!</div>`;
+    }
+    t.scrollTop = t.scrollHeight;
+        }
         function copy(c) {
             const cmd = `cat <<EOF > script.sh\n${c}\nEOF\nbash script.sh`;
             navigator.clipboard.writeText(cmd);
