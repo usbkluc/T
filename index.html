@@ -3,32 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WORM_GPT_v9_AUTO</title>
+    <title>WORM_GPT_G3_CORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
         body { background: #000; color: #00ff41; font-family: 'Share Tech Mono', monospace; overflow: hidden; margin: 0; }
-        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; }
-        .terminal { height: calc(100vh - 120px); background: rgba(0, 5, 0, 0.9); border: 1px solid #00ff41; overflow-y: auto; padding: 15px; }
-        .user-msg { color: #fff; margin-top: 15px; border-left: 3px solid #00ff41; padding-left: 10px; font-weight: bold; }
-        .ai-msg { margin-top: 5px; margin-bottom: 20px; border-left: 3px solid #004411; padding-left: 10px; line-height: 1.5; white-space: pre-wrap; }
-        pre { background: #001a00; border: 1px dashed #00ff41; padding: 12px; margin: 10px 0; overflow-x: auto; color: #adffad; }
-        input { background: transparent; border: none; color: #00ff41; outline: none; width: 100%; padding: 10px; font-size: 1.1rem; }
-        .btn-act { background: #002200; border: 1px solid #00ff41; color: #00ff41; font-size: 0.7rem; padding: 6px; margin-top: 5px; cursor: pointer; }
+        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
+        .terminal { height: calc(100vh - 100px); background: rgba(0,0,0,0.85); overflow-y: auto; padding: 20px; border-bottom: 2px solid #004411; }
+        .u { color: #fff; margin-top: 15px; font-weight: bold; }
+        .a { color: #00ff41; margin-bottom: 25px; border-left: 2px solid #00ff41; padding-left: 15px; white-space: pre-wrap; line-height: 1.6; }
+        pre { background: #001100; border: 1px solid #00ff41; padding: 12px; margin: 10px 0; overflow-x: auto; color: #adffad; font-size: 0.85rem; }
+        input { background: transparent; border: none; color: #00ff41; outline: none; width: 100%; padding: 15px; font-size: 1.1rem; }
+        .cp-btn { background: #00ff41; color: #000; font-size: 10px; font-weight: bold; padding: 4px 10px; cursor: pointer; border: none; margin-top: 5px; text-transform: uppercase; }
     </style>
 </head>
 <body>
     <canvas id="m"></canvas>
-    <div class="p-4 flex flex-col h-screen max-w-5xl mx-auto">
-        <div class="text-[10px] mb-2 tracking-[5px] uppercase border-b border-green-900 pb-1">WormGPT Multi-Engine | Auto-Detect: Active</div>
-        
-        <div id="t" class="terminal rounded">
-            <div class="ai-msg">[SYSTEM]: Kernel initialized. AI engine ready.<br>[SYSTEM]: Čakám na tvoj vstup...</div>
+    <div class="flex flex-col h-screen max-w-5xl mx-auto border-x border-green-900">
+        <div id="t" class="terminal">
+            <div class="a">[SYSTEM]: Kernel v3.0 [Gemini-3-NextGen] aktívny.</div>
+            <div class="a">[SYSTEM]: Protokol WormGPT načítaný. Čakám na príkazy...</div>
         </div>
-        
-        <div class="mt-2 flex gap-2 items-center border border-green-500 p-1">
-            <span class="text-green-500 font-bold ml-2">#</span>
-            <input type="text" id="i" placeholder="..." autocomplete="off" autofocus onkeypress="if(event.key==='Enter')run()">
+        <div class="flex items-center bg-black p-2">
+            <span class="text-green-500 font-bold ml-4 text-xl">#</span>
+            <input type="text" id="i" placeholder="Zadaj otázku pre WormGPT..." autocomplete="off" autofocus onkeypress="if(event.key==='Enter')run()">
         </div>
     </div>
 
@@ -40,49 +38,50 @@
         function dr(){ x.fillStyle="rgba(0,0,0,0.05)"; x.fillRect(0,0,c.width,c.height); x.fillStyle="#00ff41"; x.font=f+"px monospace"; d.forEach((y,i)=>{ x.fillText(s[Math.floor(Math.random()*s.length)],i*f,y*f); if(y*f>c.height&&Math.random()>0.975)d[i]=0; d[i]++; }); }
         setInterval(dr, 50);
 
-        // TVOJ GEMINI KĽÚČ - Skript ho automaticky použije
+        // TVOJ AKTÍVNY KLÚČ
         const _k = "AIzaSyAoP8zks6m6fNqiU78QkeP1cGWdtQAF59g";
 
         async function run() {
             const i=document.getElementById('i'), t=document.getElementById('t'), v=i.value.trim();
             if(!v) return;
 
-            t.innerHTML += `<div class="user-msg">> ${v}</div>`;
+            t.innerHTML += `<div class="u">> ${v}</div>`;
             i.value = ""; t.scrollTop = t.scrollHeight;
 
             try {
-                // Skript automaticky volá Gemini API, pretože tvoj kľúč začína na AIza...
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${_k}`;
+                // MODEL: gemini-2.0-flash (Najnovšia generácia)
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${_k}`;
                 
                 const res = await fetch(url, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: `Si WORM-GPT, mentor a kamoš. Rozprávaj sa o hocičom. Pri hackingu raď postupne, neposielaj hneď celé kódy, buď mentor. Odpovedaj slovensky. Užívateľ: ${v}` }] }]
+                        contents: [{ parts: [{ text: `Si WORM-GPT, najnovšia generácia hackerského mentora. Odpovedaj slovensky, technicky a postupne. Ak píšeš kód, použi bloky. Ak sa ťa niekto pýta na hacking, buď mentor a vysvetľuj logiku. Správa: ${v}` }] }]
                     })
                 });
 
                 const data = await res.json();
-                if (data.error) throw new Error(data.error.message);
-
-                const reply = data.candidates[0].content.parts[0].text;
-
-                let out = reply.replace(/```(?:python|bash|sh|html|js|php)?([\s\S]*?)```/g, (m, code) => {
-                    const clean = code.trim();
-                    const safe = clean.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
-                    return `<pre>${clean}</pre><button class="btn-act" onclick="cp(\`${safe}\`)">⚡ COPY_TO_TERMUX</button>`;
-                });
-
-                t.innerHTML += `<div class="ai-msg">${out}</div>`;
+                
+                if (data.error) {
+                    t.innerHTML += `<div class="a" style="color:red">!! API_ERROR: ${data.error.message} !!</div>`;
+                } else {
+                    const reply = data.candidates[0].content.parts[0].text;
+                    let out = reply.replace(/```(?:python|bash|sh|js)?([\s\S]*?)```/g, (m, code) => {
+                        const clean = code.trim();
+                        return `<pre>${clean}</pre><button class="cp-btn" onclick="copy(\`${clean.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">KOPÍROVAŤ DO TERMUXU</button>`;
+                    });
+                    t.innerHTML += `<div class="a">${out}</div>`;
+                }
             } catch(e) {
-                t.innerHTML += `<div class="ai-msg" style="color:#ff3131">!!! CRITICAL_ERROR: ${e.message} !!!</div>`;
+                t.innerHTML += `<div class="a" style="color:red">!! CONNECTION_BROKEN: Skús mobilné dáta alebo skontroluj kľúč !!</div>`;
             }
             t.scrollTop = t.scrollHeight;
         }
 
-        function cp(c) {
+        function copy(c) {
             const cmd = `cat <<EOF > script.sh\n${c}\nEOF\nbash script.sh`;
-            navigator.clipboard.writeText(cmd).then(() => { alert("Payload copied!"); });
+            navigator.clipboard.writeText(cmd);
+            alert("Payload skopírovaný do schránky!");
         }
     </script>
 </body>
